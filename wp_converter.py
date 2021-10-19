@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 #csv conversion
 from typing import Iterable
 import pandas as pd
@@ -18,6 +20,8 @@ from docx.oxml.shared import OxmlElement
 from tqdm import tqdm
 #file check
 import os
+#miscellaneous
+import sys
 
 
 
@@ -226,17 +230,21 @@ def _create_document():
 
     d.save('chat.docx')
 
-filename="chat.txt"
+def main(argv):
+    filename = argv[0]
 
-#check if chat.txt or chat.csv is in the folder, if so procees to convert it
-if not os.path.isfile('./chat.csv'):
-    if os.path.isfile('./chat.txt'):
-        print('CSV file not found, converting chat.txt in chat.csv..')
-        _convert_to_csv(filename)
-        print('\nAll ok now, creating document...\n')
-        _create_document()
+    #check if chat.txt or chat.csv is in the folder, if so procees to convert it
+    if not os.path.isfile('./filename'):
+        if os.path.isfile('./filename'):
+            print('CSV file not found, converting chat.txt in chat.csv..')
+            _convert_to_csv(filename)
+            print('\nAll ok now, creating document...\n')
+            _create_document()
+        else:
+            print('Cannot find chat.txt nor chat.csv in folder, please add the chat source')
     else:
-        print('Cannot find chat.txt nor chat.csv in folder, please add the chat source')
-else:
-    print('\nAll ok, creating document...\n')
-    _create_document()
+        print('\nAll ok, creating document...\n')
+        _create_document()
+
+if __name__ == "__main__":
+   main(sys.argv[1:])
