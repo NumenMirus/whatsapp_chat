@@ -1,3 +1,4 @@
+from typing import Iterable
 import pandas as pd
 import csv
 import docx
@@ -59,7 +60,7 @@ def _create_user1_paragraph(d, text, alignment):
     # Add attributes to the element
     shd.set(qn('w:val'), 'clear')
     shd.set(qn('w:color'), 'auto')
-    shd.set(qn('w:fill'), '00CC33')
+    shd.set(qn('w:fill'), '5CFA78')
 
     # Set the font size - this is important! Without this step the
     # tag.rPr value below will be None.
@@ -131,6 +132,7 @@ def _create_document():
 
     file = csv.reader(open('chat.csv', 'r'))
 
+    #automatically finds the two users
     user1 = ''
     user2 = ''
     i = 0
@@ -144,11 +146,6 @@ def _create_document():
         if line[3] != user1:
             user2 = line[3]
             break
-        
-        
-
-    print(user1)
-    print(user2)
     
     #composing the document
     d.add_heading('Chat con'+user2, 0)
@@ -164,6 +161,8 @@ def _create_document():
         #temporary limit in the loop for testing purposes
         # if i == 1000:
         #     break
+    
+    print('\nDone!')
 
     d.save('chat.docx')
 
