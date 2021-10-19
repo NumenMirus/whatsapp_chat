@@ -1,6 +1,8 @@
+#csv conversion
 from typing import Iterable
 import pandas as pd
 import csv
+#.docx creation
 import docx
 from docx.oxml.shared import OxmlElement
 from docx.oxml.ns import qn
@@ -12,13 +14,18 @@ from docx.shared import RGBColor
 from docx.oxml.ns import qn
 from docx.shared import Mm
 from docx.oxml.shared import OxmlElement
+#proressbar
 from tqdm import tqdm
+#file check
 import os
 
 
 filename="chat.txt"
 
 def _convert_to_csv(filename):
+    """If there is no "chat.csv" file in the folder, this function will take the "chat.txt" file and convert it into a .csv one"""
+
+    #converts .txt in .csv using pandas and splitting each line in tokens
     df=pd.read_csv(filename,header=None,error_bad_lines=False,encoding='utf8')
     df= df.drop(0)
     df.columns=['Date', 'Chat']
@@ -37,6 +44,8 @@ def _convert_to_csv(filename):
     df.to_csv("chat.csv",index=False)
 
 def _create_user1_paragraph(d, text, alignment):
+    """This function will create a message based on the format of User1: green shadow ad right alignment."""
+
     # Add a paragraph
     p = d.add_paragraph()
     p.alignment = 2
@@ -70,6 +79,8 @@ def _create_user1_paragraph(d, text, alignment):
     tag.rPr.append(shd)
 
 def _create_user2_paragraph(d, text, alignment):
+    """This function will create a message based on the format of User2: white shadow ad left alignment."""
+
     # Add a paragraph
     p = d.add_paragraph()
     p.alignment = 0
@@ -103,9 +114,13 @@ def _create_user2_paragraph(d, text, alignment):
     tag.rPr.append(shd)
 
 def _create_document():
+    """this function creates a .docx document that will be the canva for the messages. It is made in such a way to resemble Whatsapp's theme"""
+
     d = Document()
     document = Document()
     section = d.sections[0]
+
+    #set the dimensions of the page: A4 with large side margins
     section.page_height = Mm(297)
     section.page_width = Mm(210)
     section.left_margin = Mm(50)
@@ -166,6 +181,7 @@ def _create_document():
 
     d.save('chat.docx')
 
+#check if chat.txt or chat.csv is in the folder, if so procees to convert it
 if not os.path.isfile('./chat.csv'):
     if os.path.isfile('./chat.txt'):
         print('CSV file not found, converting chat.txt in chat.csv..')
