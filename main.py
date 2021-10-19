@@ -20,11 +20,11 @@ from tqdm import tqdm
 import os
 
 
-filename="chat.txt"
+
 
 def _convert_to_csv(filename):
     """If there is no "chat.csv" file in the folder, this function will take the "chat.txt" file and convert it into a .csv one"""
-
+    
     #converts .txt in .csv using pandas and splitting each line in tokens
     df=pd.read_csv(filename,header=None,error_bad_lines=False,encoding='utf8')
     df= df.drop(0)
@@ -113,6 +113,47 @@ def _create_user2_paragraph(d, text, alignment):
 
     tag.rPr.append(shd)
 
+def _create_day_paragraph(d, text):
+    """This function will create a message based on the format of Day: no shadow ad center alignment."""
+    p = d.add_paragraph()
+    p.paragraph_format.line_spacing = 1
+    p.alignment = 1
+    p.add_run(text)
+
+def _parse_date(date):
+    """This function will refine the date, adding the literla month and the full year. this function must updated every 100 years to display the correct century"""
+
+    parsed_date = date.split('/')
+    refined_date = ''
+    if len(parsed_date) < 3:
+        return refined_date
+    elif parsed_date[1] == '01':
+        refined_date = parsed_date[0]+' Gennaio 20'+parsed_date[2]
+    elif parsed_date[1] == '02':
+        refined_date = parsed_date[0]+' Febbraio 20'+parsed_date[2]
+    elif parsed_date[1] == '03':
+        refined_date = parsed_date[0]+' Marzo 20'+parsed_date[2]
+    elif parsed_date[1] == '04':
+        refined_date = parsed_date[0]+' Aprile 20'+parsed_date[2]
+    elif parsed_date[1] == '05':
+        refined_date = parsed_date[0]+' Maggio 20'+parsed_date[2]
+    elif parsed_date[1] == '06':
+        refined_date = parsed_date[0]+' Giugno 20'+parsed_date[2]
+    elif parsed_date[1] == '07':
+        refined_date = parsed_date[0]+' Luglio 20'+parsed_date[2]
+    elif parsed_date[1] == '08':
+        refined_date = parsed_date[0]+' Agosto 20'+parsed_date[2]
+    elif parsed_date[1] == '09':
+        refined_date = parsed_date[0]+' Settembre 20'+parsed_date[2]
+    elif parsed_date[1] == '10':
+        refined_date = parsed_date[0]+' Ottobre 20'+parsed_date[2]
+    elif parsed_date[1] == '11':
+        refined_date = parsed_date[0]+' Novembre 20'+parsed_date[2]
+    elif parsed_date[1] == '12':
+        refined_date = parsed_date[0]+' Dicembre 20'+parsed_date[2]
+
+    return refined_date
+
 def _create_document():
     """this function creates a .docx document that will be the canva for the messages. It is made in such a way to resemble Whatsapp's theme"""
 
@@ -166,7 +207,11 @@ def _create_document():
     d.add_heading('Chat con'+user2, 0)
 
     i = 0
+    date = ''
     for line in tqdm(file, desc="Parsing messages..."):
+        if date != line[0]:
+            date = line[0]
+            _create_day_paragraph(d, _parse_date(date))
         if line[3] == user1:
             _create_user1_paragraph(d, line[2]+' - '+line[1], 2)
         elif line[3] == user2:
@@ -174,12 +219,14 @@ def _create_document():
         i = i+1
 
         #temporary limit in the loop for testing purposes
-        # if i == 1000:
-        #     break
+        if i == 1000:
+            break
     
     print('\nDone!')
 
     d.save('chat.docx')
+
+filename="chat.txt"
 
 #check if chat.txt or chat.csv is in the folder, if so procees to convert it
 if not os.path.isfile('./chat.csv'):
