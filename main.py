@@ -35,7 +35,7 @@ def _convert_to_csv(filename):
     df['Text'] = df['Text'].str.replace('Questo messaggio è stato eliminato','Messaggio Eliminato')    
     df.to_csv("chat.csv",index=False)
 
-def _create_mike_paragraph(d, text, alignment):
+def _create_user1_paragraph(d, text, alignment):
     # Add a paragraph
     p = d.add_paragraph()
     p.alignment = 2
@@ -68,7 +68,7 @@ def _create_mike_paragraph(d, text, alignment):
 
     tag.rPr.append(shd)
 
-def _create_giorgia_paragraph(d, text, alignment):
+def _create_user2_paragraph(d, text, alignment):
     # Add a paragraph
     p = d.add_paragraph()
     p.alignment = 0
@@ -127,31 +127,38 @@ def _create_document():
     shd1 = OxmlElement('w:displayBackgroundShape')
     d.settings.element.insert(0,shd1)
 
-    # #creating the style for Mike
-    # styles = d.styles
-    # style = styles.add_style('Arial_mike', WD_STYLE_TYPE.PARAGRAPH) #Arial is the name I set because that's the font I'm gonna use
-    # style.font.name = 'Arial'
-    # style.font.size = Pt(8)
-    # style.font.color.rgb = RGBColor(0x72, 0xCC, 0x48)
-
-    # #creating the style for Giorgia
-    # styles = d.styles
-    # style = styles.add_style('Arial_giorgia', WD_STYLE_TYPE.PARAGRAPH) #Arial is the name I set because that's the font I'm gonna use
-    # style.font.name = 'Arial'
-    # style.font.size = Pt(8)
-    # style.font.color.rgb = RGBColor(0x28, 0x54, 0xD5)
-
-    #composing the document
-    d.add_heading('Chat con Potato', 0)
+    
 
     file = csv.reader(open('chat.csv', 'r'))
 
+    user1 = ''
+    user2 = ''
+    i = 0
+
+    for line in file:
+        if i <= 3:
+            i = i+1 
+            continue
+        if user1 == '':
+            user1 = line[3]
+        if line[3] != user1:
+            user2 = line[3]
+            break
+        
+        
+
+    print(user1)
+    print(user2)
+    
+    #composing the document
+    d.add_heading('Chat con'+user2, 0)
+
     i = 0
     for line in tqdm(file, desc="Parsing messages..."):
-        if line[3] == ' Mike':
-            _create_mike_paragraph(d, line[2]+line[1], 2)
-        elif line[3] == ' GiorgiaChiarucci':
-            _create_giorgia_paragraph(d,  line[1]+line[2], 0)
+        if line[3] == user1:
+            _create_user1_paragraph(d, line[2]+' - '+line[1], 2)
+        elif line[3] == user2:
+            _create_user2_paragraph(d,  line[1]+' - '+line[2], 0)
         i = i+1
 
         #temporary limit in the loop for testing purposes
