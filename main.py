@@ -162,8 +162,8 @@ def _create_document():
         i = i+1
 
         #temporary limit in the loop for testing purposes
-        if i == 1000:
-            break
+        # if i == 1000:
+        #     break
 
     d.save('chat.docx')
 
