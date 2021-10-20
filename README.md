@@ -13,3 +13,6 @@ Run with:
 
 `wp_converter chat.txt`
 
+or
+
+`wp_converter -h`
