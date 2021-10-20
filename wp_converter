@@ -24,8 +24,6 @@ import os
 import sys
 
 
-
-
 def _convert_to_csv(filename):
     """If there is no "chat.csv" file in the folder, this function will take the "chat.txt" file and convert it into a .csv one"""
     chat = filename.split('/')
