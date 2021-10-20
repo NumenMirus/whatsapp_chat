@@ -38,7 +38,7 @@ def _convert_to_csv(filename):
     df= df.drop(0)
     df.columns=['Date', 'Chat']
     Message= df["Chat"].str.split("-", n = 1, expand = True) 
-    df['Date']=df['Date'].str.replace(",","") 
+    df['Date']=df['Date'].str.replace(",","")
     df['Time']=Message[0]
     df['Text']=Message[1]
     Message1= df["Text"].str.split(":", n = 1, expand = True) 
@@ -235,18 +235,26 @@ def _create_document():
     d.save('chat.docx')
 
 def main(argv):
-    filename = argv
 
     print('CSV file not found, converting chat.txt in chat.csv...')
-    _convert_to_csv(filename)
+    _convert_to_csv(argv)
     print('\nAll ok now, creating document...\n')
     _create_document()
 
 if __name__ == "__main__":
 
-    fn = sys.argv[1]
-    if os.path.exists(fn):
-        filename = os.path.realpath(fn)
-        main(filename)
+    fn = sys.argv
+    print(len(fn))
+    if len(fn) > 2:
+        print("Too many arguments: run wp_converter -h to see the syntax")
+    elif len(fn) < 2:
+        print("Too few arguments: run wp_converter -h to see the syntax")
+    elif fn[1] == '-h':
+        print("Usage:\n\n\twp_converter -options/filename\n\nOptions:\n\n\t-h                Shows this help message\n\n\tfilename          create a docx chat file from the given filename\n\nCopyright 2021 - NumenMirus")
     else:
-        print('Cannot find chat.txt in folder, please add the chat source')
+        fn = fn[1]
+        if os.path.exists(fn):
+            filepath = os.path.realpath(fn)
+            main(filepath)
+        else:
+            print('Cannot find "' + fn + '" in folder, please add the chat source')
