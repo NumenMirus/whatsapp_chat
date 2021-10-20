@@ -244,7 +244,7 @@ def main(argv):
 if __name__ == "__main__":
 
     fn = sys.argv
-    print(len(fn))
+    
     if len(fn) > 2:
         print("Too many arguments: run wp_converter -h to see the syntax")
     elif len(fn) < 2:
