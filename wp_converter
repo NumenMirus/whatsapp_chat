@@ -120,7 +120,7 @@ def _create_user2_paragraph(d, text, alignment):
     tag.rPr.append(shd)
 
 def _create_day_paragraph(d, text):
-    """This function will create a message based on the format of Day: no shadow ad center alignment."""
+    """This function will create a message based on the format of Day: no shadow and center alignment."""
     p = d.add_paragraph()
     p.paragraph_format.line_spacing = 1
     p.alignment = 1
