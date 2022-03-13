@@ -9,6 +9,8 @@ Run install.sh to install the program:
 
 `./install.sh`
 ## Run the program!
+Delete the first line of the chat.txt (the one about encrypted messages), file if present
+
 Run with:
 
 `wp_converter chat.txt`
